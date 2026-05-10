@@ -1,5 +1,5 @@
 // ===== DATA =====
-let todos = JSON.parse(localStorage.getItem("todos")) || [];
+let todos = [];
 let filterType = "all";
 const searchInput = document.getElementById("searchInput");
 
@@ -7,9 +7,13 @@ window.onload = function () {
   renderTodos();
 };
 
+// ===== Load từ db lên =====
+
+
+
+
 // ===== ADD TODO =====
 function addTodo() {
-  
   const input = document.getElementById("todoInput");
   const value = input.value.trim();
 
@@ -26,10 +30,7 @@ function addTodo() {
   renderTodos();
 }
 
-// ===== SAVE =====
-function saveTodos() {
-  localStorage.setItem("todos", JSON.stringify(todos));
-}
+
 
 // ===== RENDER =====
 function renderTodos() {
@@ -39,18 +40,20 @@ function renderTodos() {
   let filteredTodos = todos;
 
   if (filterType === "active") {
-    filteredTodos = todos.filter(todo => !todo.done);
+    filteredTodos = todos.filter((todo) => !todo.done);
   }
 
   if (filterType === "done") {
-    filteredTodos = todos.filter(todo => todo.done);
+    filteredTodos = todos.filter((todo) => todo.done);
   }
   const keyword = searchInput.value.trim().toLowerCase();
-  if (keyword)  {
-    filteredTodos = filteredTodos.filter(todo => todo.text.toLowerCase().includes(keyword));
+  if (keyword) {
+    filteredTodos = filteredTodos.filter((todo) =>
+      todo.text.toLowerCase().includes(keyword),
+    );
   }
 
-  filteredTodos.forEach(todo => {
+  filteredTodos.forEach((todo) => {
     list.innerHTML += `
       <li>
         <input
@@ -58,10 +61,10 @@ function renderTodos() {
           ${todo.done ? "checked" : ""}
           onclick="toggleTodo(${todo.id})"
         />
-        <span style="${todo.done ? "text-decoration: line-through;" : ""}">
+        <span style="${todo.done ? "text-decoration: line-through; font-size: 20px; " : ""}">
           ${todo.text}
         </span>
-        <button onclick="deleteTodo(${todo.id})">X</button>
+        <button onclick="deleteTodo(${todo.id})" class="btn btn-secondary btn-sm ms-2 mb-2">Clear</button>
       </li>
     `;
   });
@@ -69,8 +72,8 @@ function renderTodos() {
 
 // ===== TOGGLE =====
 function toggleTodo(id) {
-  todos = todos.map(todo =>
-    todo.id === id ? { ...todo, done: !todo.done } : todo
+  todos = todos.map((todo) =>
+    todo.id === id ? { ...todo, done: !todo.done } : todo,
   );
   saveTodos();
   renderTodos();
@@ -78,7 +81,7 @@ function toggleTodo(id) {
 
 // ===== DELETE =====
 function deleteTodo(id) {
-  todos = todos.filter(todo => todo.id !== id);
+  todos = todos.filter((todo) => todo.id !== id);
   saveTodos();
   renderTodos();
 }
@@ -97,7 +100,7 @@ function handleEnter(event) {
 }
 // ===== CLEAR COMPLETED =====
 function clearComplete() {
-  todos = todos.filter(todo => !todo.done);
+  todos = todos.filter((todo) => !todo.done);
   saveTodos();
   renderTodos();
 }
