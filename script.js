@@ -4,33 +4,38 @@ let filterType = "all";
 const searchInput = document.getElementById("searchInput");
 
 window.onload = function () {
-  renderTodos();
+  loadTodos();
 };
 
 // ===== Load từ db lên =====
-
-
-
+async function loadTodos() {
+  try {
+    const res = await axios.get("http://localhost:5000/todos");
+    todos = res.data;
+    renderTodos();
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // ===== ADD TODO =====
-function addTodo() {
+async function addTodo() {
   const input = document.getElementById("todoInput");
   const value = input.value.trim();
 
   if (value === "") return;
 
-  todos.push({
-    id: Date.now(),
-    text: value,
-    done: false,
-  });
+  try {
+    await axios.post("http://localhost:5000/todos", {
+      title: value,
+    });
 
-  input.value = "";
-  saveTodos();
-  renderTodos();
+    input.value = "";
+    loadTodos();
+  } catch (err) {
+    console.log(err);
+  }
 }
-
-
 
 // ===== RENDER =====
 function renderTodos() {
@@ -40,16 +45,16 @@ function renderTodos() {
   let filteredTodos = todos;
 
   if (filterType === "active") {
-    filteredTodos = todos.filter((todo) => !todo.done);
+    filteredTodos = todos.filter((todo) => !todo.completed);
   }
 
   if (filterType === "done") {
-    filteredTodos = todos.filter((todo) => todo.done);
+    filteredTodos = todos.filter((todo) => todo.completed);
   }
   const keyword = searchInput.value.trim().toLowerCase();
   if (keyword) {
     filteredTodos = filteredTodos.filter((todo) =>
-      todo.text.toLowerCase().includes(keyword),
+      todo.title.toLowerCase().includes(keyword),
     );
   }
 
@@ -58,11 +63,11 @@ function renderTodos() {
       <li>
         <input
           type="checkbox"
-          ${todo.done ? "checked" : ""}
-          onclick="toggleTodo(${todo.id})"
+          ${todo.completed ? "checked" : ""}
+          onclick="toggleTodo(${todo.id}, ${todo.completed})"
         />
-        <span style="${todo.done ? "text-decoration: line-through; font-size: 20px; " : ""}">
-          ${todo.text}
+        <span style="${todo.completed ? "text-decoration: line-through; font-size: 20px; " : ""}">
+          ${todo.title}
         </span>
         <button onclick="deleteTodo(${todo.id})" class="btn btn-secondary btn-sm ms-2 mb-2">Clear</button>
       </li>
@@ -71,19 +76,26 @@ function renderTodos() {
 }
 
 // ===== TOGGLE =====
-function toggleTodo(id) {
-  todos = todos.map((todo) =>
-    todo.id === id ? { ...todo, done: !todo.done } : todo,
-  );
-  saveTodos();
-  renderTodos();
+async function toggleTodo(id, completed) {
+  try {
+    await axios.put(`http://localhost:5000/todos/${id}`, {
+      completed: !completed,
+    });
+    await loadTodos();
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 // ===== DELETE =====
-function deleteTodo(id) {
-  todos = todos.filter((todo) => todo.id !== id);
-  saveTodos();
-  renderTodos();
+async function deleteTodo(id) {
+  try {
+    await axios.delete(`http://localhost:5000/todos/${id}`, {
+    });
+    await loadTodos();
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 // ===== FILTER =====
@@ -99,10 +111,19 @@ function handleEnter(event) {
   }
 }
 // ===== CLEAR COMPLETED =====
-function clearComplete() {
-  todos = todos.filter((todo) => !todo.done);
-  saveTodos();
-  renderTodos();
+async function clearComplete() {
+  try{
+    const completedTodos = todos.filter(
+      (todo) => todo.completed
+    );
+    for (const todo of completedTodos){
+      await axios.delete(`http://localhost:5000/todos/${todo.id}`
+      );
+    }
+    loadTodos();
+  } catch (err){
+    console.log(err);
+  }
 }
 
 searchInput.addEventListener("input", renderTodos);
