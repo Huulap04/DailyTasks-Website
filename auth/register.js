@@ -6,7 +6,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   const password = document.getElementById("password").value;
 
   try {
-    await axios.post("http://localhost:5000/auth/register", {
+    await axios.post("https://dailytasks-website.onrender.com/auth/register", {
       username,
       email,
       password

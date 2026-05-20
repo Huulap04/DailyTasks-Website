@@ -1,3 +1,4 @@
+const API_URL = "https://dailytasks-website.onrender.com";
 // ===== DATA =====
 let todos = [];
 let filterType = "all";
@@ -23,7 +24,7 @@ function authToken() {
 // ===== Load từ db lên =====
 async function loadTodos() {
   try {
-    const res = await axios.get("http://localhost:5000/todos", authToken());
+    const res = await axios.get(`${API_URL}/todos`, authToken());
     todos = res.data;
     renderTodos();
   } catch (err) {
@@ -41,7 +42,7 @@ async function addTodo() {
 
   try {
     await axios.post(
-      "http://localhost:5000/todos",
+      `${API_URL}/todos`,
       {
         title: value,
       },
@@ -97,7 +98,7 @@ function renderTodos() {
 async function toggleTodo(id, completed) {
   try {
     await axios.put(
-      `http://localhost:5000/todos/${id}`,
+      `${API_URL}/todos/${id}`,
       {
         completed: !completed,
       },
@@ -112,7 +113,7 @@ async function toggleTodo(id, completed) {
 // ===== DELETE =====
 async function deleteTodo(id) {
   try {
-    await axios.delete(`http://localhost:5000/todos/${id}`, authToken());
+    await axios.delete(`${API_URL}/todos/${id}`, authToken());
     await loadTodos();
   } catch (err) {
     console.log(err);
@@ -136,7 +137,7 @@ async function clearComplete() {
   try {
     const completedTodos = todos.filter((todo) => todo.completed);
     for (const todo of completedTodos) {
-      await axios.delete(`http://localhost:5000/todos/${todo.id}`, authToken());
+      await axios.delete(`${API_URL}/todos/${todo.id}`, authToken());
     }
     loadTodos();
   } catch (err) {
