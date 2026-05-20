@@ -6,13 +6,13 @@ const searchInput = document.getElementById("searchInput");
 const token = localStorage.getItem("token");
 if (!token) {
   window.location.href = "./login.html";
-  const user = JSON.parse(localStorage.getItem("user"));
-  if(user){
-    document.getElementById("userEmail").textContent = user.username;
-  }
 }
 
 window.onload = function () {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    document.getElementById("userEmail").textContent = user.username;
+  }
   loadTodos();
 };
 
