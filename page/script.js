@@ -92,7 +92,6 @@ function renderTodos() {
         <span style="${todo.completed ? "text-decoration: line-through; font-size: 20px; " : ""}">
           ${todo.title}
         </span>
-        <button onclick="deleteTodo(${todo.id})" class="btn btn-secondary btn-sm ms-2 mb-2">Clear</button>
       </li>
     `;
   });
