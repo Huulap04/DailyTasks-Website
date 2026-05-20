@@ -154,7 +154,7 @@ if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "./Welcome.html";
+    window.location.href = "./index.html";
   });
 }
 
