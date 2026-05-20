@@ -10,10 +10,11 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       {
         email,
         password,
-      }
+      },
     );
 
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
     window.location.href = "./HomePage.html";
   } catch (err) {
     console.log(err.response?.data || err.message);
