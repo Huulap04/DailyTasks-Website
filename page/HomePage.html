@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Todo App</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="HomePage.css" />
+  </head>
+
+  <body class="todo-page">
+    <main class="todo-wrapper">
+      <header class="todo-header">
+        <div>
+          <h1>Todo App</h1>
+
+          <div class="user-email">
+            <i class="fa-regular fa-user"></i>
+            <span id="userEmail">lapnh.it@gmail.com</span>
+          </div>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Đăng xuất</span>
+        </button>
+      </header>
+
+      <section class="todo-card">
+        <div class="add-row">
+          <input
+            id="todoInput"
+            type="text"
+            placeholder="Nhập thông tin nhắc nhở..."
+            onkeydown="handleEnter(event)"
+          />
+
+          <button class="add-btn" onclick="addTodo()">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add</span>
+          </button>
+        </div>
+
+        <div class="card-line"></div>
+
+        <div class="control-area">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Search todos..."
+              onkeydown="handleEnter(event)"
+            />
+          </div>
+
+          <div class="filter-row">
+            <button class="filter-btn active" onclick="setFilter('all')">
+              ALL
+            </button>
+
+            <button class="filter-btn" onclick="setFilter('active')">
+              ACTIVE
+            </button>
+
+            <button class="filter-btn" onclick="setFilter('done')">
+              COMPLETED
+            </button>
+
+            <button class="filter-btn danger" onclick="clearComplete()">
+              CLEAR COMPLETED
+            </button>
+          </div>
+        </div>
+
+        <ul id="todoList" class="todo-list">
+          <li class="empty-todo">Chưa có công việc nào. Hãy thêm công việc mới!</li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>

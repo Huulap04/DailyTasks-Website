@@ -1,24 +1,21 @@
-const sql = require("mssql");
+const { Pool } = require("pg");
 require("dotenv").config();
 
-const config = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
-  options: {
-    encrypt: false,
-    trustServerCertificate: true,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
   },
-};
+});
 
 async function connectDB() {
   try {
-    await sql.connect(config);
-    console.log("Connected to SQL Server được r nhe ");
+    const client = await pool.connect();
+    console.log("Connected to Supabase PostgreSQL được r nhe");
+    client.release();
   } catch (err) {
     console.error("coi kỹ lại coi sai dì ròi:", err);
+    throw err;
   }
 }
-
-module.exports = { sql, connectDB };
+module.exports = { pool, connectDB };

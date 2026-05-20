@@ -2,19 +2,33 @@
 let todos = [];
 let filterType = "all";
 const searchInput = document.getElementById("searchInput");
+const token = localStorage.getItem("token");
+if (!token) {
+  window.location.href = "./login.html";
+}
 
 window.onload = function () {
   loadTodos();
 };
 
+//===========Hàm dùng chung=====
+function authToken() {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+}
 // ===== Load từ db lên =====
 async function loadTodos() {
   try {
-    const res = await axios.get("http://localhost:5000/todos");
+    const res = await axios.get("http://localhost:5000/todos", authToken());
     todos = res.data;
     renderTodos();
   } catch (err) {
-    console.log(err);
+    console.log(err.response?.data || err.message);
+    alert(err.response?.data?.message || " Loading failed");
   }
 }
 
@@ -26,9 +40,13 @@ async function addTodo() {
   if (value === "") return;
 
   try {
-    await axios.post("http://localhost:5000/todos", {
-      title: value,
-    });
+    await axios.post(
+      "http://localhost:5000/todos",
+      {
+        title: value,
+      },
+      authToken(),
+    );
 
     input.value = "";
     loadTodos();
@@ -78,9 +96,13 @@ function renderTodos() {
 // ===== TOGGLE =====
 async function toggleTodo(id, completed) {
   try {
-    await axios.put(`http://localhost:5000/todos/${id}`, {
-      completed: !completed,
-    });
+    await axios.put(
+      `http://localhost:5000/todos/${id}`,
+      {
+        completed: !completed,
+      },
+      authToken(),
+    );
     await loadTodos();
   } catch (err) {
     console.log(err);
@@ -90,8 +112,7 @@ async function toggleTodo(id, completed) {
 // ===== DELETE =====
 async function deleteTodo(id) {
   try {
-    await axios.delete(`http://localhost:5000/todos/${id}`, {
-    });
+    await axios.delete(`http://localhost:5000/todos/${id}`, authToken());
     await loadTodos();
   } catch (err) {
     console.log(err);
@@ -112,18 +133,24 @@ function handleEnter(event) {
 }
 // ===== CLEAR COMPLETED =====
 async function clearComplete() {
-  try{
-    const completedTodos = todos.filter(
-      (todo) => todo.completed
-    );
-    for (const todo of completedTodos){
-      await axios.delete(`http://localhost:5000/todos/${todo.id}`
-      );
+  try {
+    const completedTodos = todos.filter((todo) => todo.completed);
+    for (const todo of completedTodos) {
+      await axios.delete(`http://localhost:5000/todos/${todo.id}`, authToken());
     }
     loadTodos();
-  } catch (err){
+  } catch (err) {
     console.log(err);
   }
+}
+
+//==========logout===========
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "./Welcome.html";
+  });
 }
 
 searchInput.addEventListener("input", renderTodos);

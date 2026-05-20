@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Todo</title>
+
+    <link rel="stylesheet" href="./auth.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <main class="auth-page">
+      <section class="auth-shell">
+        <div class="auth-panel form-panel">
+          <a href="./Welcome.html" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại
+          </a>
+
+          <div class="brand">
+            <div class="brand-icon">
+              <i class="fa-regular fa-square-check"></i>
+            </div>
+
+            <div class="title">
+              <h1>Đăng nhập</h1>
+              <p>Chào mừng bạn quay lại với Todo</p>
+            </div>
+          </div>
+
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+
+              <div class="input-box">
+                <i class="fa-regular fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="email@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Mật khẩu</label>
+
+              <div class="input-box">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  required
+                />
+                <i class="fa-regular fa-eye eye-icon"></i>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="remember">
+                <input type="checkbox" />
+                <span>Ghi nhớ tôi</span>
+              </label>
+
+              <a href="#" class="small-link">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <span>Đăng nhập</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <p class="switch-text">
+            Chưa có tài khoản?
+            <a href="./register.html">Đăng ký ngay</a>
+          </p>
+        </div>
+
+        <div class="auth-panel note-panel">
+          <div class="paper-note main-note">
+            <span class="pin"></span>
+            <p class="note-label">Today plan</p>
+            <h2>Biến việc cần làm thành việc đã xong ✨</h2>
+
+            <ul>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                Học NodeJS
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                Làm Todo App
+              </li>
+              <li>
+                <i class="fa-regular fa-circle"></i>
+                Nghỉ ngơi một chút
+              </li>
+            </ul>
+          </div>
+
+          <div class="mini-note note-a">
+            <i class="fa-regular fa-lightbulb"></i>
+            <span>Ý tưởng nhỏ mỗi ngày</span>
+          </div>
+
+          <div class="mini-note note-b">
+            <i class="fa-regular fa-star"></i>
+            <span>Focus mode</span>
+          </div>
+
+          <div class="quote-card">
+            “Một checklist rõ ràng giúp ngày của bạn nhẹ hơn.”
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../auth/login.js"></script>
+  </body>
+</html>
