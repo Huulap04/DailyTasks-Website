@@ -9,13 +9,13 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     await axios.post("https://dailytasks-website.onrender.com/auth/register", {
       username,
       email,
-      password
+      password,
     });
 
-    alert("Register success");
+    alert("Register successful");
     window.location.href = "login.html";
   } catch (err) {
-    console.log(err.reponse?.data ||  err.message);
-    alert(err.reponse?.data?.message || " Register failed")
+    console.log(err.response?.data || err.message);
+    alert(err.response?.data?.message || "Register failed");
   }
 });

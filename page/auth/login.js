@@ -5,16 +5,18 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value;
 
   try {
-    const res = await axios.post("https://dailytasks-website.onrender.com/auth/login", {
-      email,
-      password
-    });
+    const res = await axios.post(
+      "https://dailytasks-website.onrender.com/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
     localStorage.setItem("token", res.data.token);
-
     window.location.href = "./HomePage.html";
   } catch (err) {
-    console.log(err.response?.data ||  err.message);
-    alert(err.response?.data?.message || " Login failed")
+    console.log(err.response?.data || err.message);
+    alert(err.response?.data?.message || "Login failed");
   }
 });
