@@ -54,7 +54,7 @@ const login = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({
-        message: "Email not found",
+        message: "Tài khoản chưa được đăng ký",
       });
     }
 
@@ -63,7 +63,7 @@ const login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
-        message: "Wrong password",
+        message: "Sai mật khẩu",
       });
     }
 

@@ -18,6 +18,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     window.location.href = "./HomePage.html";
   } catch (err) {
     console.log(err.response?.data || err.message);
-    alert(err.response?.data?.message || "Login failed");
+    alert(err.response?.data?.message || "Đăng nhập thất bại");
   }
 });
