@@ -109,7 +109,7 @@ function Home() {
             className="logout-btn"
             onClick={() => {
               logout();
-              navigate("/");
+              navigate("/",{ replace: true });
             }}
           >
             <i className="fa-solid fa-right-from-bracket"></i>
