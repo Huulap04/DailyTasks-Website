@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api.js";
 import "./Home.css";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../Context/AuthContext.jsx";
 
 function Home() {
   const navigate = useNavigate();
