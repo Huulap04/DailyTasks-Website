@@ -61,14 +61,7 @@ function Home() {
     }
   };
 
-  const deleteTodo = async (id) => {
-    try {
-      await API.delete(`/todos/${id}`);
-      loadTodos();
-    } catch (err) {
-      alert(err.response?.data?.message || "Delete failed");
-    }
-  };
+  
 
   const clearComplete = async () => {
     const completedTodos = todos.filter((todo) => todo.completed);
@@ -196,13 +189,6 @@ function Home() {
                   >
                     {todo.title}
                   </span>
-
-                  <button
-                    className="btn btn-secondary btn-sm ms-2 mb-2"
-                    onClick={() => deleteTodo(todo.id)}
-                  >
-                    Clear
-                  </button>
                 </li>
               ))
             )}
