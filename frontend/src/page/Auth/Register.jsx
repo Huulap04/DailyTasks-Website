@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import API from "../../api";
 import "./auth.css";
+import PasswordInput from "../../components/PassWordInput";
 
 function Register() {
   const navigate = useNavigate();
@@ -89,20 +90,11 @@ function Register() {
 
             <div className="form-group">
               <label htmlFor="password">Mật khẩu</label>
-
-              <div className="input-box">
-                <i className="fa-solid fa-lock"></i>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="••••••••"
+              <PasswordInput
                   value={form.password}
                   onChange={handleChange}
-                  required
-                />
-                <i className="fa-regular fa-eye eye-icon"></i>
-              </div>
+                  name="password"
+                />  
             </div>
 
             <button type="submit" className="submit-btn">

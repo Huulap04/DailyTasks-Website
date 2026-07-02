@@ -96,6 +96,7 @@ body {
   font-weight: 700;
   transition: 0.2s ease;
   font-size: 14px;
+ 
 }
 
 .back-link:hover {
@@ -156,6 +157,7 @@ body {
   color: #374151;
   font-size: 14px;
   font-weight: 700;
+  text-align: start;
 }
 
 .input-box {
@@ -354,7 +356,7 @@ body {
   gap: 12px;
   font-weight: 800;
   animation: miniFloat 3.5s ease-in-out infinite;
-  margin-top: -50px;
+  margin-top: -40px;
   margin-left: -20px;
  
 }
@@ -371,8 +373,8 @@ body {
 }
 
 .note-b {
-  right: 30px;
-  bottom: 130px;
+  right: 10px;
+  bottom: 200px;
   rotate: -5deg;
   animation-delay: 0.45s;
 }

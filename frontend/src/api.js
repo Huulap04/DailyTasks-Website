@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// const API = axios.create({
+//   baseURL: "https://dailytasks-website.onrender.com",
+// });
 const API = axios.create({
-  baseURL: "https://dailytasks-website.onrender.com",
+  baseURL: "http://localhost:5000",
 });
 
 API.interceptors.request.use((config) => {

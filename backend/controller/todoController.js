@@ -6,8 +6,11 @@ const getTodos = async (req, res) => {
     const userId = req.user.id;
 
     const result = await pool.query(
-      `SELECT * FROM todos WHERE "userId" = $1 ORDER BY id DESC`,
-      [userId]
+      `SELECT id, title, note, reminder,priority,category, completed, created_at
+   FROM todos
+   WHERE "userId" = $1
+   ORDER BY created_at DESC`,
+      [userId],
     );
 
     res.json(result.rows);
@@ -21,17 +24,21 @@ const getTodos = async (req, res) => {
 // ===== ADD TODO =====
 const addTodo = async (req, res) => {
   try {
-    const { title } = req.body;
+    console.log("BODY BACKEND:", req.body);
+
+    const { title, note, reminder } = req.body;
     const userId = req.user.id;
 
-    await pool.query(
-      `INSERT INTO todos (title, completed, "userId")
-       VALUES ($1, $2, $3)`,
-      [title, false, userId]
+    const result = await pool.query(
+      `INSERT INTO todos (title, note, reminder, priority, category, completed, "userId")
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING *`,
+      [title, note || null, reminder || null, req.body.priority || null, req.body.category || null, false, userId],
     );
 
     res.json({
       message: "Todo added",
+      todo: result.rows[0],
     });
   } catch (err) {
     res.status(500).json({
@@ -51,7 +58,7 @@ const updateTodo = async (req, res) => {
       `UPDATE todos
        SET completed = $1
        WHERE id = $2 AND "userId" = $3`,
-      [completed, todoId, userId]
+      [completed, todoId, userId],
     );
 
     res.json({
@@ -73,7 +80,7 @@ const deleteTodo = async (req, res) => {
     await pool.query(
       `DELETE FROM todos
        WHERE id = $1 AND "userId" = $2`,
-      [todoId, userId]
+      [todoId, userId],
     );
 
     res.json({
@@ -85,10 +92,34 @@ const deleteTodo = async (req, res) => {
     });
   }
 };
+const editTodo = async (req, res) => {
+  try {
+    const { title, note, reminder, priority, category } = req.body;
+    const userId = req.user.id;
+    const todoId = req.params.id;
+
+    const result = await pool.query(
+      `UPDATE todos
+       SET title = $1,
+           note = $2,
+           reminder = $3,
+           priority = $4,
+           category = $5
+       WHERE id = $6 AND "userId" = $7
+       RETURNING *`,
+      [title, note || null, reminder || null, priority, category, todoId, userId]
+    );
+
+    res.json({ message: "Todo edited", todo: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = {
   getTodos,
   addTodo,
   updateTodo,
   deleteTodo,
+  editTodo
 };

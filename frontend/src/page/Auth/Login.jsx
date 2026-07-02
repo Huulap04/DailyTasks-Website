@@ -3,6 +3,7 @@ import { useState } from "react";
 import API from "../../api";
 import "./auth.css";
 import { useAuth } from "../../Context/AuthContext";
+import PasswordInput from "../../components/PassWordInput";
 
 function Login() {
   const navigate = useNavigate();
@@ -73,20 +74,11 @@ function Login() {
 
             <div className="form-group">
               <label htmlFor="password">Mật khẩu</label>
-
-              <div className="input-box">
-                <i className="fa-solid fa-lock"></i>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="••••••••"
+              <PasswordInput
                   value={form.password}
                   onChange={handleChange}
-                  required
-                />
-                <i className="fa-regular fa-eye eye-icon"></i>
-              </div>
+                  name="password"
+                /> 
             </div>
 
             <div className="form-row">
