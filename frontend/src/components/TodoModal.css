@@ -103,3 +103,15 @@
     font-weight: 600;
     color: #334155;
 }
+
+.modal-actions button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.modal-feedback {
+    margin: 0 0 14px;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 700;
+}

@@ -1,29 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./TodoDetail.css";
 import { TrashBox } from "./icons.jsx";
 
 function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    note: "",
-    reminder: "",
-    priority: "Trung bình",
-    category: "Khác",
-  });
-
-  useEffect(() => {
-    if (todo) {
-      setForm({
-        title: todo.title || "",
-        note: todo.note || "",
-        reminder: todo.reminder ? todo.reminder.slice(0, 16) : "",
-        priority: todo.priority || "Trung bình",
-        category: todo.category || "Khác",
-      });
-      setIsEditing(false);
-    }
-  }, [todo]);
+  const [form, setForm] = useState(() => ({
+    title: todo?.title || "",
+    note: todo?.note || "",
+    reminder: todo?.reminder ? todo.reminder.slice(0, 16) : "",
+    priority: todo?.priority || "Trung bình",
+    category: todo?.category || "Khác",
+  }));
 
   if (!todo) return null;
 
@@ -34,8 +21,9 @@ function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
     });
   };
 
-  const handleSave = () => {
-    onUpdate(todo.id, form);
+  const handleSave = async () => {
+    const updated = await onUpdate(todo.id, form);
+    if (updated) setIsEditing(false);
   };
 
   return (
@@ -165,9 +153,9 @@ function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
 
             <button
               className="detail-btn done-btn"
-              onClick={() => {
-                toggleTodo(todo.id, todo.completed);
-                onClose();
+              onClick={async () => {
+                const updated = await toggleTodo(todo.id, todo.completed);
+                if (updated) onClose();
               }}
             >
               Hoàn thành
@@ -175,9 +163,9 @@ function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
 
             <button
               className="detail-btn delete-btn"
-              onClick={() => {
-                onDelete(todo.id);
-                onClose();
+              onClick={async () => {
+                const deleted = await onDelete(todo.id);
+                if (deleted) onClose();
               }}
             >
               <TrashBox />

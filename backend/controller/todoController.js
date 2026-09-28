@@ -1,4 +1,5 @@
 const { pool } = require("../db/db");
+const { sendError } = require("../utils/http");
 
 // ===== GET TODOS =====
 const getTodos = async (req, res) => {
@@ -13,37 +14,31 @@ const getTodos = async (req, res) => {
       [userId],
     );
 
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể tải danh sách công việc.");
   }
 };
 
 // ===== ADD TODO =====
 const addTodo = async (req, res) => {
   try {
-    console.log("BODY BACKEND:", req.body);
-
-    const { title, note, reminder } = req.body;
+    const { title, note, reminder, priority, category } = req.body;
     const userId = req.user.id;
 
     const result = await pool.query(
       `INSERT INTO todos (title, note, reminder, priority, category, completed, "userId")
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [title, note || null, reminder || null, req.body.priority || null, req.body.category || null, false, userId],
+      [title, note, reminder, priority, category, false, userId],
     );
 
-    res.json({
+    return res.status(201).json({
       message: "Todo added",
       todo: result.rows[0],
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể thêm công việc.");
   }
 };
 
@@ -54,20 +49,22 @@ const updateTodo = async (req, res) => {
     const userId = req.user.id;
     const todoId = req.params.id;
 
-    await pool.query(
+    const result = await pool.query(
       `UPDATE todos
        SET completed = $1
        WHERE id = $2 AND "userId" = $3`,
       [completed, todoId, userId],
     );
 
-    res.json({
+    if (result.rowCount === 0) {
+      return sendError(res, 404, "TODO_NOT_FOUND", "Không tìm thấy công việc.");
+    }
+
+    return res.json({
       message: "Todo updated",
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể cập nhật công việc.");
   }
 };
 
@@ -77,19 +74,21 @@ const deleteTodo = async (req, res) => {
     const userId = req.user.id;
     const todoId = req.params.id;
 
-    await pool.query(
+    const result = await pool.query(
       `DELETE FROM todos
        WHERE id = $1 AND "userId" = $2`,
       [todoId, userId],
     );
 
-    res.json({
+    if (result.rowCount === 0) {
+      return sendError(res, 404, "TODO_NOT_FOUND", "Không tìm thấy công việc.");
+    }
+
+    return res.json({
       message: "Todo deleted",
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể xóa công việc.");
   }
 };
 const editTodo = async (req, res) => {
@@ -110,9 +109,13 @@ const editTodo = async (req, res) => {
       [title, note || null, reminder || null, priority, category, todoId, userId]
     );
 
-    res.json({ message: "Todo edited", todo: result.rows[0] });
+    if (result.rowCount === 0) {
+      return sendError(res, 404, "TODO_NOT_FOUND", "Không tìm thấy công việc.");
+    }
+
+    return res.json({ message: "Todo edited", todo: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể sửa công việc.");
   }
 };
 

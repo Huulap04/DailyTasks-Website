@@ -1,6 +1,7 @@
 const { pool } = require("../db/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendError } = require("../utils/http");
 
 //============Register===========
 const register = async (req, res) => {
@@ -14,9 +15,7 @@ const register = async (req, res) => {
     );
 
     if (checkMail.rows.length > 0) {
-      return res.status(400).json({
-        message: "Email already exists",
-      });
+      return sendError(res, 409, "EMAIL_ALREADY_EXISTS", "Email đã được sử dụng.");
     }
 
     // Hash Password
@@ -29,13 +28,14 @@ const register = async (req, res) => {
       [username, email, hashedPassword]
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Register successful",
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    if (err.code === "23505") {
+      return sendError(res, 409, "EMAIL_ALREADY_EXISTS", "Email đã được sử dụng.");
+    }
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể đăng ký tài khoản.");
   }
 };
 
@@ -53,18 +53,14 @@ const login = async (req, res) => {
     const user = result.rows[0];
 
     if (!user) {
-      return res.status(400).json({
-        message: "Tài khoản chưa được đăng ký",
-      });
+      return sendError(res, 401, "INVALID_CREDENTIALS", "Email hoặc mật khẩu không đúng.");
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({
-        message: "Sai mật khẩu",
-      });
+      return sendError(res, 401, "INVALID_CREDENTIALS", "Email hoặc mật khẩu không đúng.");
     }
 
     // Create Token
@@ -79,7 +75,7 @@ const login = async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       message: "Login successful",
       token,
       user: {
@@ -89,9 +85,7 @@ const login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    return sendError(res, 500, "INTERNAL_ERROR", "Không thể đăng nhập.");
   }
 };
 

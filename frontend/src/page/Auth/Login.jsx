@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import API from "../../api";
 import "./auth.css";
-import { useAuth } from "../../Context/AuthContext";
-import PasswordInput from "../../components/PassWordInput";
+import { useAuth } from "../../Context/useAuth";
+import PasswordInput from "../../components/PasswordInput";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,6 +12,8 @@ function Login() {
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -22,6 +24,8 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setIsSubmitting(true);
 
     try {
       const res = await API.post("/auth/login", form);
@@ -30,7 +34,9 @@ function Login() {
 
       navigate("/home");
     } catch (err) {
-      alert(err.response?.data?.message || "Đăng nhập thất bại");
+      setMessage(err.response?.data?.message || "Đăng nhập thất bại");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -55,6 +61,7 @@ function Login() {
           </div>
 
           <form className="auth-form" onSubmit={handleLogin}>
+            {message && <p className="form-feedback error" role="alert">{message}</p>}
             <div className="form-group">
               <label htmlFor="email">Email</label>
 
@@ -92,8 +99,8 @@ function Login() {
               </a>
             </div>
 
-            <button type="submit" className="submit-btn">
-              <span>Đăng nhập</span>
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              <span>{isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}</span>
               <i className="fa-solid fa-arrow-right"></i>
             </button>
           </form>

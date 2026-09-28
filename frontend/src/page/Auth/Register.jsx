@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import API from "../../api";
 import "./auth.css";
-import PasswordInput from "../../components/PassWordInput";
+import PasswordInput from "../../components/PasswordInput";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,6 +12,8 @@ function Register() {
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -22,14 +24,18 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setIsSubmitting(true);
 
     try {
       await API.post("/auth/register", form);
 
-      alert("Đăng ký thành công");
+      setMessage("Đăng ký thành công. Đang chuyển đến trang đăng nhập...");
       navigate("/login");
     } catch (err) {
-      alert(err.response?.data?.message || "Đăng ký thất bại");
+      setMessage(err.response?.data?.message || "Đăng ký thất bại");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -54,6 +60,7 @@ function Register() {
           </div>
 
           <form className="auth-form" onSubmit={handleRegister}>
+            {message && <p className="form-feedback error" role="alert">{message}</p>}
             <div className="form-group">
               <label htmlFor="username">Tên người dùng</label>
 
@@ -97,8 +104,8 @@ function Register() {
                 />  
             </div>
 
-            <button type="submit" className="submit-btn">
-              <span>Đăng ký</span>
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              <span>{isSubmitting ? "Đang đăng ký..." : "Đăng ký"}</span>
               <i className="fa-solid fa-arrow-right"></i>
             </button>
           </form>

@@ -9,6 +9,8 @@ function TodoModal({ isOpen, onClose, onSave }) {
     priority: "Trung bình",
     category: "Khác",
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
@@ -19,10 +21,19 @@ function TodoModal({ isOpen, onClose, onSave }) {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     if (!form.title.trim()) return;
 
-    onSave(form);
+    setError("");
+    setIsSaving(true);
+    const saved = await onSave(form);
+    setIsSaving(false);
+
+    if (!saved) {
+      setError("Không thể lưu công việc. Vui lòng thử lại.");
+      return;
+    }
 
     setForm({
       title: "",
@@ -37,7 +48,7 @@ function TodoModal({ isOpen, onClose, onSave }) {
 
   return (
     <div className="modal-overlay">
-      <div className="todo-modal">
+      <form className="todo-modal" onSubmit={handleSubmit}>
         <h2 className="modal-title">
           <i className="fa-solid fa-pen"></i>
           New Task
@@ -50,6 +61,7 @@ function TodoModal({ isOpen, onClose, onSave }) {
           value={form.title}
           onChange={handleChange}
           placeholder="Task name..."
+          required
         />
 
         <label>Note</label>
@@ -103,16 +115,18 @@ function TodoModal({ isOpen, onClose, onSave }) {
           onChange={handleChange}
         />
 
+        {error && <p className="modal-feedback" role="alert">{error}</p>}
+
         <div className="modal-actions">
-          <button className="cancel" onClick={onClose}>
+          <button className="cancel" type="button" onClick={onClose} disabled={isSaving}>
             Cancel
           </button>
 
-          <button className="save" onClick={handleSubmit}>
-            Save
+          <button className="save" type="submit" disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
