@@ -663,3 +663,169 @@ body:has(.todo-page.dark) {
   background: #fef2f2;
   font-weight: 700;
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-box {
+  height: 42px;
+  padding: 0 12px;
+  gap: 8px;
+  color: #fff;
+  background: #2563eb;
+}
+
+.filter-box i,
+.filter-box select {
+  color: #fff;
+}
+
+.filter-box select {
+  font-size: 14px;
+}
+
+.filter-box option {
+  color: #111827;
+}
+
+.todo-summary {
+  display: flex;
+  gap: 14px;
+  padding-top: 18px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.summary-overdue {
+  color: #dc2626;
+}
+
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 33px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: #1e3a8a;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
+}
+
+.bulk-bar button,
+.pagination button,
+.undo-toast button {
+  border: 0;
+  border-radius: 9px;
+  padding: 8px 11px;
+  cursor: pointer;
+  color: #fff;
+  background: #2563eb;
+  font-weight: 700;
+}
+
+.bulk-bar .bulk-delete {
+  background: #dc2626;
+}
+
+.select-all-row {
+  margin-bottom: 12px;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.select-all-row label,
+.select-todo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.select-todo {
+  margin-top: 6px;
+}
+
+.todo-item.is-overdue {
+  border-color: #fecaca;
+}
+
+.todo-item.is-overdue::before {
+  background: #dc2626;
+}
+
+.overdue-badge {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 33px 28px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.undo-toast {
+  position: fixed;
+  z-index: 20;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: min(420px, calc(100% - 32px));
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: #fff;
+  background: #1e293b;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.3);
+  font-weight: 700;
+}
+
+.undo-toast button {
+  color: #1d4ed8;
+  background: #fff;
+}
+
+@media (max-width: 600px) {
+  .filter-controls,
+  .bulk-bar {
+    width: 100%;
+  }
+
+  .filter-box {
+    flex: 1 1 100%;
+  }
+
+  .bulk-bar {
+    margin: 0 22px;
+  }
+}

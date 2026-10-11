@@ -158,7 +158,7 @@ function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
                 if (updated) onClose();
               }}
             >
-              Hoàn thành
+              {todo.completed ? "Đánh dấu chưa xong" : "Hoàn thành"}
             </button>
 
             <button

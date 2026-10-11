@@ -1,4 +1,6 @@
 function TodoBadges({ todo }) {
+  const reminder = todo.reminder ? new Date(todo.reminder) : null;
+  const isOverdue = reminder && !todo.completed && reminder < new Date();
   const getCategoryIcon = (category) => {
     switch (category) {
       case "Công việc":
@@ -21,10 +23,10 @@ function TodoBadges({ todo }) {
         {todo.category || "Khác"}
       </span>
 
-      {todo.reminder && (
-        <span className="todo-badge date-badge">
+      {reminder && (
+        <span className={`todo-badge date-badge ${isOverdue ? "overdue-badge" : ""}`}>
           <i className="fa-regular fa-calendar"></i>
-          {new Date(todo.reminder).toLocaleDateString("vi-VN")}
+          {isOverdue ? "Quá hạn: " : ""}{reminder.toLocaleDateString("vi-VN")}
         </span>
       )}
     </div>
