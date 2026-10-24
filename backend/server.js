@@ -92,7 +92,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ================= START SERVER =================
+// ================= LOCAL SERVER =================
+// Vercel imports the Express instance below as a serverless function. Only open
+// a port when this file is run directly for local development.
 const startServer = async () => {
   try {
     validateEnvironment();
@@ -107,4 +109,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;
