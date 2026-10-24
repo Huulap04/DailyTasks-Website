@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm --prefix backend start\" \"npm --prefix frontend run dev\""
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
   }
 }
