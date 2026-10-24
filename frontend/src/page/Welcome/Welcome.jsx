@@ -1,69 +1,19 @@
 import { Link } from "react-router-dom";
+import AppLogo from "../../components/AppLogo.jsx";
 import "./welcome.css";
+import "./footer.css";
+import "./welcome-extra.css";
 
 function Welcome() {
-  return (
-    <main className="welcome-page">
-      <div className="blob blob-1"></div>
-      <div className="blob blob-2"></div>
-      <div className="blob blob-3"></div>
-
-      <section className="hero">
-        <div className="app-icon-wrap">
-          <div className="app-icon">
-            <i className="fa-regular fa-square-check"></i>
-          </div>
-        </div>
-
-        <h1>Chào mừng đến với Todo</h1>
-
-        <p className="subtitle">
-          Quản lý công việc một cách thông minh, hiệu quả và đơn giản. Biến ý
-          tưởng thành hành động mỗi ngày.
-        </p>
-
-        <div className="feature-grid">
-          <article className="feature-card">
-            <div className="feature-icon green">
-              <i className="fa-regular fa-circle-check"></i>
-            </div>
-
-            <h3>Dễ sử dụng</h3>
-            <p>Giao diện trực quan, thao tác nhanh chóng</p>
-          </article>
-
-          <article className="feature-card">
-            <div className="feature-icon purple">
-              <i className="fa-regular fa-star"></i>
-            </div>
-
-            <h3>Thông minh</h3>
-            <p>Tổ chức công việc khoa học và hiệu quả</p>
-          </article>
-
-          <article className="feature-card">
-            <div className="feature-icon orange">
-              <i className="fa-solid fa-bolt"></i>
-            </div>
-
-            <h3>Đầy đủ tính năng</h3>
-            <p>Mọi công cụ bạn cần trong một ứng dụng</p>
-          </article>
-        </div>
-
-        <div className="hero-actions">
-          <Link to="/register" className="btn btn-light">
-            <span>Bắt đầu ngay</span>
-            <i className="fa-solid fa-arrow-right"></i>
-          </Link>
-
-          <Link to="/login" className="btn btn-outline">
-            <span>Đăng nhập</span>
-          </Link>
-        </div>
-      </section>
-    </main>
-  );
+  return <main className="landing-page">
+    <header className="landing-nav"><AppLogo /><span className="landing-sync"><i className="fa-solid fa-cloud" /> Đang đồng bộ...</span><nav><a href="#home">Trang chủ</a><a href="#features">Tính năng</a><a href="#start">Bắt đầu</a></nav><div><Link className="landing-login" to="/login">Đăng nhập</Link><Link className="landing-start" to="/register">Bắt đầu miễn phí</Link></div></header>
+    <section className="landing-hero" id="home"><p className="landing-eyebrow"><i className="fa-solid fa-circle" /> Trợ lý công việc PWA thế hệ mới</p><h1>Làm chủ ngày mới với sự <span>tập trung và an yên</span></h1><p className="landing-copy">Daily Tasks giúp bạn sắp xếp công việc cá nhân nhẹ nhàng, không áp lực và luôn đúng tiến độ — mọi lúc, mọi nơi, kể cả khi ngoại tuyến.</p><div className="landing-actions"><Link className="landing-start" to="/register"><i className="fa-solid fa-rocket" />Bắt đầu ngay</Link><Link className="landing-demo" to="/login"><i className="fa-solid fa-arrow-right-to-bracket" />Đăng nhập</Link></div><p className="landing-trust"><span><i className="fa-regular fa-circle-check" /> Miễn phí vĩnh viễn</span><span><i className="fa-solid fa-cloud" /> Đồng bộ tức thời</span><span><i className="fa-solid fa-mobile-screen" /> Sẵn sàng PWA</span></p>
+      <div className="landing-preview"><div className="preview-bar"><span><i /><i /><i /></span><small>daily-tasks.app/workspace</small><b><i className="fa-solid fa-circle" />Đồng bộ an toàn</b></div><div className="preview-main"><div><p>Tìm kiếm việc cần làm...</p><button type="button"><i className="fa-solid fa-plus" />Thêm việc mới</button></div><section><article><small>Đang thực hiện</small><strong>08</strong></article><article><small>Đã hoàn thành</small><strong>14</strong></article><article><small>Quá hạn nhẹ nhàng</small><strong>02</strong></article></section><ul><li><i className="fa-regular fa-circle" /><span><b>Hoàn thiện giao diện Daily Tasks</b><small>Hạn chót: Hôm nay</small></span><em>Thiết kế UI</em></li><li><i className="fa-regular fa-circle" /><span><b>Lập kế hoạch tuần mới</b><small>Hạn chót: Ngày mai</small></span><em>Công việc</em></li></ul></div></div>
+    </section>
+    <section className="landing-philosophy"><div><p className="section-kicker">Triết lý thiết kế</p><h2>Khoảng lặng cần thiết giữa nhịp sống hối hả</h2><p>Chúng tôi tin rằng năng suất thật sự không đến từ danh sách việc làm dày đặc, mà từ một trải nghiệm tối giản giúp bạn nhìn rõ điều quan trọng nhất mỗi ngày.</p><div className="philosophy-stats"><article><strong>0%</strong><span>Không xao nhãng</span></article><article><strong>100%</strong><span>Riêng tư tuyệt đối</span></article></div></div><div className="philosophy-visual"><i className="fa-solid fa-mug-hot" /><strong>Không gian tập trung</strong><span>Một góc nhỏ bình yên cho ngày của bạn.</span></div></section>
+    <section className="landing-features" id="features"><p className="section-kicker">Đặc quyền trải nghiệm</p><h2>Mọi tính năng được chăm chút để bạn làm việc nhẹ nhàng hơn</h2><p className="features-intro">Không phải tạp hóa quy trình, tập trung vào những tương tác bạn cần nhất.</p><div><article><i className="fa-regular fa-calendar-check" /><h3>Lập kế hoạch tĩnh lặng</h3><p>Giao diện trực quan giúp bạn xác định ưu tiên và theo dõi công việc trong nhịp độ vừa phải.</p><a href="#start">Khám phá chế độ tập trung <i className="fa-solid fa-arrow-right" /></a></article><article><i className="fa-solid fa-wand-magic-sparkles" /><h3>Nhắc nhớ thông minh & PWA</h3><p>Thông báo nhẹ nhàng và trải nghiệm điện thoại thân thiện đang được hoàn thiện.</p><span>Đang phát triển</span></article><article><i className="fa-solid fa-sliders" /><h3>Kiểm soát linh hoạt</h3><p>Thao tác hàng loạt, lọc và sắp xếp để bạn làm chủ dòng công việc của mình.</p><Link to="/register">Quản lý không giới hạn <i className="fa-solid fa-arrow-right" /></Link></article></div></section>
+    <section className="landing-pwa" id="start"><div><p><i className="fa-solid fa-mobile-screen" /> Cài đặt không cần qua App Store hay CH Play</p><h2>Cài đặt ứng dụng PWA trên máy tính hoặc điện thoại chỉ với một cú nhấp</h2><span>Tính năng sẽ được mở khi phần PWA của Daily Tasks hoàn thiện.</span><button type="button" disabled><i className="fa-solid fa-download" /> Sắp có: Cài đặt ứng dụng</button></div><aside><div>☆ ☆ ☆ ☆ ☆</div><p>“Từ khi dùng Daily Tasks, buổi sáng của mình trật tự hơn.”</p><small>Người dùng thử nghiệm</small></aside></section>
+    <footer className="landing-footer" id="about"><div><AppLogo /><p>Một không gian gọn gàng để làm chủ nhịp điệu công việc mỗi ngày.</p></div><div><strong>Khám phá</strong><a href="#features">Tính năng</a><a href="#about">Về Daily Tasks</a></div><div><strong>Trải nghiệm</strong><Link to="/register">Tạo tài khoản</Link><span><i className="fa-solid fa-mobile-screen" /> PWA sắp có</span></div><p className="landing-copyright">© {new Date().getFullYear()} Daily Tasks. Xây dựng cho những ngày tập trung hơn.</p></footer>
+  </main>;
 }
-
 export default Welcome;

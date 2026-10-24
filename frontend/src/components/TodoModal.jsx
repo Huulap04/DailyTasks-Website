@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./TodoModal.css";
+import TaskFormFields from "./TaskFormFields.jsx";
 
 function TodoModal({ isOpen, onClose, onSave }) {
   const [form, setForm] = useState({
@@ -47,85 +48,14 @@ function TodoModal({ isOpen, onClose, onSave }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <form className="todo-modal" onSubmit={handleSubmit}>
-        <h2 className="modal-title">
-          <i className="fa-solid fa-pen"></i>
-          New Task
-        </h2>
-
-        <label>Title</label>
-
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Task name..."
-          required
-        />
-
-        <label>Note</label>
-
-        <textarea
-          name="note"
-          value={form.note}
-          onChange={handleChange}
-          placeholder="Write a note..."
-        ></textarea>
-
-        <div className="modal-select-row">
-          <div className="select-box">
-            <i className="fa-regular fa-flag"></i>
-            <select
-              name="priority"
-              value={form.priority}
-              onChange={handleChange}
-            >
-              <option value="Thấp">Thấp</option>
-              <option value="Trung bình">Trung bình</option>
-              <option value="Cao">Cao</option>
-            </select>
-          </div>
-
-          <div className="select-box">
-            <i className="fa-regular fa-circle"></i>
-            <select
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-            >
-              <option value="Công việc">Công việc</option>
-              <option value="Cá nhân">Cá nhân</option>
-              <option value="Mua sắm">Mua sắm</option>
-              <option value="Sức khỏe">Sức khỏe</option>
-              <option value="Khác">Khác</option>
-            </select>
-          </div>
-        </div>
-
-        <label>
-          <i className="fa-regular fa-clock"></i>
-          Reminder
-        </label>
-
-        <input
-          type="datetime-local"
-          name="reminder"
-          value={form.reminder}
-          onChange={handleChange}
-        />
+    <div className="modal-overlay" role="presentation" onMouseDown={onClose}>
+      <form className="todo-modal ds-card" aria-label="Thêm công việc" onSubmit={handleSubmit} onMouseDown={(event) => event.stopPropagation()}>
+        <header className="todo-modal__header"><div><p>Tạo mới</p><h2>Thêm công việc</h2></div><button type="button" className="todo-modal__close" aria-label="Đóng" onClick={onClose}><i className="fa-solid fa-xmark" /></button></header>
+        <TaskFormFields form={form} onChange={handleChange} />
 
         {error && <p className="modal-feedback" role="alert">{error}</p>}
 
-        <div className="modal-actions">
-          <button className="cancel" type="button" onClick={onClose} disabled={isSaving}>
-            Cancel
-          </button>
-
-          <button className="save" type="submit" disabled={isSaving}>
-            {isSaving ? "Saving..." : "Save"}
-          </button>
-        </div>
+        <footer className="modal-actions"><button className="ds-button ds-button--ghost cancel" type="button" onClick={onClose} disabled={isSaving}>Hủy bỏ</button><button className="ds-button ds-button--primary save" type="submit" disabled={isSaving}><i className="fa-solid fa-check" />{isSaving ? "Đang lưu..." : "Lưu công việc"}</button></footer>
       </form>
     </div>
   );

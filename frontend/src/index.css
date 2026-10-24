@@ -1,118 +1,50 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap");
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: "Nunito", system-ui, sans-serif;
-  --heading: "Nunito", system-ui, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  /* Design tokens: use these semantic names rather than one-off hex values. */
+  --ds-font-sans: Inter, system-ui, sans-serif;
+  --ds-font-display: "Plus Jakarta Sans", var(--ds-font-sans);
+  --ds-color-bg: #f8f9ff;
+  --ds-color-surface: #ffffff;
+  --ds-color-surface-muted: #f1f5fb;
+  --ds-color-text: #0b1c30;
+  --ds-color-text-muted: #64748b;
+  --ds-color-border: #dce3ef;
+  --ds-color-primary: #4f46e5;
+  --ds-color-primary-hover: #3525cd;
+  --ds-color-danger: #e11d48;
+  --ds-color-danger-hover: #be123c;
+  --ds-focus-ring: 0 0 0 3px rgb(99 102 241 / 12%);
+  --ds-radius-sm: 9px;
+  --ds-radius-md: 12px;
+  --ds-radius-lg: 18px;
+  --ds-shadow-card: 0 1px 3px rgb(15 23 42 / 4%);
+  --ds-shadow-overlay: 0 24px 60px rgb(15 23 42 / 20%);
+  --ds-transition: 180ms ease;
+  font-family: var(--ds-font-sans);
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+html, body, #root { min-width: 320px; min-height: 100%; margin: 0; }
+body { background: var(--ds-color-bg); }
+*, *::before, *::after { box-sizing: border-box; }
+button, input, textarea, select { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #818cf8; outline-offset: 2px; }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-body {
-  margin: 0;
-  font-family: var(--sans);
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+/* Reusable primitives shared by workspace, auth, and dialogs. */
+.ds-card { border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); background: var(--ds-color-surface); box-shadow: var(--ds-shadow-card); }
+.ds-button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 1px solid transparent; border-radius: var(--ds-radius-sm); font-size: 13px; font-weight: 700; line-height: 1; cursor: pointer; transition: background-color var(--ds-transition), border-color var(--ds-transition), color var(--ds-transition), box-shadow var(--ds-transition), transform var(--ds-transition); }
+.ds-button:hover:not(:disabled) { transform: translateY(-1px); }
+.ds-button:disabled { cursor: not-allowed; opacity: .6; }
+.ds-button--primary { color: #fff; background: var(--ds-color-primary); box-shadow: 0 6px 14px rgb(79 70 229 / 15%); }
+.ds-button--primary:hover:not(:disabled) { background: var(--ds-color-primary-hover); }
+.ds-button--secondary { border-color: var(--ds-color-border); color: var(--ds-color-text); background: var(--ds-color-surface); }
+.ds-button--secondary:hover:not(:disabled) { background: var(--ds-color-surface-muted); }
+.ds-button--ghost { color: #475569; background: transparent; }
+.ds-button--ghost:hover:not(:disabled) { background: var(--ds-color-surface-muted); }
+.ds-button--danger { color: #fff; background: var(--ds-color-danger); }
+.ds-button--danger:hover:not(:disabled) { background: var(--ds-color-danger-hover); }

@@ -1,117 +1,19 @@
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, .45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-
-
-
-.todo-modal {
-    width: 450px;
-    background: white;
-    border-radius: 25px;
-    padding: 30px;
-    color: #111827;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, .25);
-
-}
-
-.todo-modal label {
-    display: block;
-    width: 100%;
-    text-align: left;
-    margin-bottom: 8px;
-    font-weight: 700;
-    color: #374151;
-}
-
-
-.todo-modal input,
-.todo-modal textarea {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-
-}
-
-.todo-modal textarea {
-    height: 100px;
-    resize: none;
-}
-
-
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-}
-
-
-
-.save {
-    background: #2563eb;
-    color: white;
-}
-
-
-
-.cancel {
-    background: #eee;
-}
-
-.modal-actions button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-
-}
-
-.modal-select-row {
-    display: flex;
-    gap: 12px;
-    margin: 12px 0px 28px;
-}
-
-.select-box {
-    flex: 1;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 14px;
-    border-radius: 14px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-}
-
-.select-box select {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 15px;
-    font-weight: 600;
-    color: #334155;
-}
-
-.modal-actions button:disabled {
-    cursor: wait;
-    opacity: 0.7;
-}
-
-.modal-feedback {
-    margin: 0 0 14px;
-    color: #b91c1c;
-    font-size: 14px;
-    font-weight: 700;
-}
+.modal-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgb(15 23 42 / 45%); backdrop-filter: blur(6px); }
+.todo-modal { width: min(100%, 570px); max-height: min(760px, calc(100vh - 40px)); overflow: auto; color: var(--ds-color-text); }
+.todo-modal__header { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px 16px; border-bottom: 1px solid #edf0f6; }
+.todo-modal__header p { margin: 0 0 3px; color: var(--ds-color-primary); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.todo-modal__header h2 { margin: 0; font: 700 21px var(--ds-font-display); }
+.todo-modal__close { display: grid; width: 34px; height: 34px; place-items: center; border: 0; border-radius: var(--ds-radius-sm); color: var(--ds-color-text-muted); background: transparent; cursor: pointer; }
+.todo-modal__close:hover { color: var(--ds-color-text); background: var(--ds-color-surface-muted); }
+.task-form-fields { display: grid; gap: 17px; padding: 20px 22px; }
+.task-form-fields label { display: grid; gap: 7px; color: #334155; font-size: 12px; font-weight: 700; }
+.task-form-fields em { color: var(--ds-color-danger); font-style: normal; }
+.task-form-fields input, .task-form-fields textarea, .task-form-fields select { width: 100%; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-sm); outline: 0; color: var(--ds-color-text); background: var(--ds-color-surface); font: 14px var(--ds-font-sans); }
+.task-form-fields input, .task-form-fields select { height: 42px; padding: 0 11px; }
+.task-form-fields textarea { min-height: 92px; padding: 11px; resize: vertical; }
+.task-form-fields input:focus, .task-form-fields textarea:focus, .task-form-fields select:focus { border-color: #818cf8; box-shadow: var(--ds-focus-ring); }
+.task-form-fields__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-feedback { margin: 0 22px 16px; padding: 10px 12px; border: 1px solid #fecdd3; border-radius: var(--ds-radius-sm); color: #be123c; background: #fff1f2; font-size: 12px; font-weight: 600; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 15px 22px; border-top: 1px solid #edf0f6; }
+.modal-actions .ds-button { min-height: 39px; }
+@media (max-width: 540px) { .modal-overlay { padding: 0; align-items: end; } .todo-modal { max-height: calc(100vh - 18px); border-radius: 20px 20px 0 0; } .task-form-fields__grid { grid-template-columns: 1fr; } .todo-modal__header, .task-form-fields, .modal-actions { padding-inline: 16px; } .modal-feedback { margin-inline: 16px; } }

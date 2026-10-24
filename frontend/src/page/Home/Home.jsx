@@ -2,12 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api.js";
 import "./Home.css";
+import "./sidebar.css";
 import { useAuth } from "../../Context/useAuth";
 import TodoFilter from "../../components/TodoFilter.jsx";
 import TodoModal from "../../components/TodoModal.jsx";
-import { Logo, TrashBox } from "../../components/icons.jsx";
 import TodoDetail from "../../components/TodoDetail.jsx";
-import TodoBadges from "../../components/TodoBadges.jsx";
+import AppLogo from "../../components/AppLogo.jsx";
+import TaskStats from "../../components/TaskStats.jsx";
+import TaskRow from "../../components/TaskRow.jsx";
+import ConfirmDialog from "../../components/ConfirmDialog.jsx";
 
 const PAGE_SIZE = 8;
 const priorityOrder = { Cao: 0, "Trung bình": 1, Thấp: 2 };
@@ -41,12 +44,17 @@ function Home() {
   );
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [isBulkMode, setIsBulkMode] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [deleteRequest, setDeleteRequest] = useState(null);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [undoTodo, setUndoTodo] = useState(null);
   const undoTimer = useRef(null);
+  const searchInputRef = useRef(null);
 
   const loadTodos = useCallback(async () => {
     await Promise.resolve();
@@ -115,7 +123,10 @@ function Home() {
   const deleteTodo = async (id, { confirm = true, allowUndo = true } = {}) => {
     const todoToDelete = todos.find((todo) => todo.id === id);
     if (!todoToDelete) return false;
-    if (confirm && !window.confirm(`Xóa công việc “${todoToDelete.title}”?`)) return false;
+    if (confirm) {
+      setDeleteRequest({ type: "single", todo: todoToDelete });
+      return false;
+    }
 
     setActionError("");
     try {
@@ -237,7 +248,20 @@ function Home() {
   };
 
   const deleteSelected = async () => {
-    if (selectedIds.length === 0 || !window.confirm(`Xóa ${selectedIds.length} công việc đã chọn?`)) return;
+    if (selectedIds.length === 0) return;
+    setDeleteRequest({ type: "multiple", count: selectedIds.length });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteRequest) return;
+    if (deleteRequest.type === "single") {
+      const request = deleteRequest;
+      setDeleteRequest(null);
+      await deleteTodo(request.todo.id, { confirm: false });
+      return;
+    }
+
+    setDeleteRequest(null);
     setActionError("");
     try {
       await Promise.all(selectedIds.map((id) => API.delete(`/todos/${id}`)));
@@ -249,79 +273,73 @@ function Home() {
     }
   };
 
+  const exitBulkMode = () => {
+    setSelectedIds([]);
+    setIsBulkMode(false);
+  };
+
+  const completedCount = todos.filter((todo) => todo.completed).length;
+
   return (
-    <main className={`todo-page ${darkMode ? "dark" : ""}`}>
-      <div className="todo-wrapper">
-        <header className="todo-header">
-          <div>
-            <Logo />
-            <h1>Daily Tasks</h1>
-            <div className="user-email"><i className="fa-regular fa-user"></i><span>{user?.username || "User"}</span></div>
+    <main className={`workspace ${darkMode ? "workspace--dark" : ""} ${isSidebarCollapsed ? "workspace--sidebar-collapsed" : ""}`}>
+      <aside className="workspace-sidebar">
+        <div className="sidebar-brand"><AppLogo /><button className="sidebar-toggle" type="button" aria-label="Thu gọn điều hướng" onClick={() => setIsSidebarCollapsed((current) => !current)}><i className="fa-solid fa-chevron-left" /></button></div>
+        <p className="sync-status"><i className="fa-solid fa-circle" /> Đã lưu trực tuyến</p>
+        <p className="sidebar-label">Không gian làm việc</p>
+        <nav className="sidebar-nav" aria-label="Điều hướng công việc">
+          <button className="is-active" type="button"><i className="fa-regular fa-calendar-days" />Hôm nay</button>
+          <button type="button" onClick={() => setIsBulkMode(true)}><i className="fa-solid fa-list-check" />Thao tác hàng loạt</button>
+          <button type="button" onClick={() => setShowModal(true)}><i className="fa-solid fa-circle-plus" />Thêm công việc</button>
+        </nav>
+        <div className="sidebar-account"><span className="avatar">{(user?.username || "U").slice(0, 1).toUpperCase()}</span><span><strong>{user?.username || "Thành viên"}</strong><small>{user?.email || "Tài khoản Daily Tasks"}</small></span></div>
+      </aside>
+
+      <section className="workspace-main">
+        <header className="workspace-topbar">
+          <button className="mobile-logo" type="button" aria-label="Daily Tasks" onClick={() => setIsSidebarCollapsed((current) => !current)}><AppLogo compact /></button>
+          <nav className="workspace-tabs" aria-label="Chế độ xem"><button className="is-active" type="button">Hôm nay</button><button type="button">Sắp tới</button><button type="button">Đã xong</button></nav>
+          <div className="topbar-actions">
+            <button className="icon-button workspace-search-button" type="button" aria-label="Tìm kiếm công việc" onClick={() => searchInputRef.current?.focus()}><i className="fa-solid fa-magnifying-glass" /></button>
+            <button className="icon-button" type="button" aria-label={darkMode ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"} onClick={() => setDarkMode((current) => !current)}><i className={darkMode ? "fa-solid fa-sun" : "fa-solid fa-moon"} /></button>
+            <button className="account-button" type="button" onClick={() => { logout(); navigate("/", { replace: true }); }}><span className="avatar">{(user?.username || "U").slice(0, 1).toUpperCase()}</span><span className="account-button__label">Đăng xuất</span><i className="fa-solid fa-arrow-right-from-bracket" /></button>
           </div>
-          <button className="theme-btn" type="button" aria-label={darkMode ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"} onClick={() => setDarkMode((currentMode) => !currentMode)}>
-            <i className={darkMode ? "fa-solid fa-sun" : "fa-solid fa-moon"}></i>
-          </button>
-          <button className="logout-btn" type="button" onClick={() => { logout(); navigate("/", { replace: true }); }}>
-            <i className="fa-solid fa-right-from-bracket"></i>Logout
-          </button>
         </header>
 
-        <section className="todo-card" aria-busy={isLoading}>
-          <div className="control-top">
-            <div className="search-box"><i className="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Search tasks..." aria-label="Tìm kiếm công việc" value={keyword} onChange={(event) => setKeyword(event.target.value)} /></div>
-            <button className="add-btn" type="button" onClick={() => setShowModal(true)}><i className="fa-solid fa-plus"></i>Add</button>
-          </div>
-          <div className="card-line"></div>
-          <div className="control-area">
-            <div className="todo-summary"><span>{activeCount} đang làm</span><span className={overdueCount ? "summary-overdue" : ""}>{overdueCount} quá hạn</span></div>
-            <div className="filter-row">
-              <TodoFilter {...{ filterType, setFilterType, priority, setPriority, category, setCategory, deadline, setDeadline, sortBy, setSortBy }} />
+        <div className="workspace-content" aria-busy={isLoading}>
+          <section className="workspace-intro"><div><p>Không gian cá nhân</p><h1>Chào {user?.username || "bạn"}, hôm nay làm gì?</h1></div><span>{new Date().toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "long" })}</span></section>
+          <div className="workspace-banner"><span><i className="fa-solid fa-cloud-arrow-up" /> Đồng bộ đám mây • Trực tuyến</span><span className="workspace-banner__hint">Mọi thay đổi được lưu tự động</span></div>
+
+          <TaskStats activeCount={activeCount} completedCount={completedCount} overdueCount={overdueCount} totalCount={todos.length} />
+
+          <section className="task-board ds-card">
+            <div className="task-board__controls">
+              <label className="task-search"><i className="fa-solid fa-magnifying-glass" /><input ref={searchInputRef} type="search" placeholder="Tìm kiếm công việc nhanh..." aria-label="Tìm kiếm công việc" value={keyword} onChange={(event) => setKeyword(event.target.value)} /></label>
+              <div className="task-board__actions">
+                <div className="more-actions"><button className="icon-button" type="button" aria-label="Mở thêm thao tác" aria-expanded={isMoreMenuOpen} onClick={() => setIsMoreMenuOpen((isOpen) => !isOpen)}><i className="fa-solid fa-ellipsis" /></button>{isMoreMenuOpen && <div className="more-actions-menu" role="menu"><button type="button" role="menuitem" onClick={() => { setIsBulkMode(true); setIsMoreMenuOpen(false); }}><i className="fa-regular fa-square-check" />Chọn nhiều công việc</button></div>}</div>
+                <button className="primary-button ds-button ds-button--primary" type="button" onClick={() => setShowModal(true)}><i className="fa-solid fa-plus" />Thêm công việc</button>
+              </div>
             </div>
-          </div>
+            <div className="task-board__filters"><TodoFilter {...{ filterType, setFilterType, priority, setPriority, category, setCategory, deadline, setDeadline, sortBy, setSortBy }} /></div>
 
-          {selectedIds.length > 0 && (
-            <div className="bulk-bar">
-              <span>Đã chọn {selectedIds.length} công việc</span>
-              <button type="button" onClick={completeSelected}><i className="fa-solid fa-check"></i>Hoàn thành</button>
-              <button className="bulk-delete" type="button" onClick={deleteSelected}><TrashBox />Xóa</button>
-              <button type="button" onClick={() => setSelectedIds([])}>Bỏ chọn</button>
-            </div>
-          )}
-          {actionError && <p className="todo-feedback" role="alert">{actionError}</p>}
+            {isBulkMode && <div className="bulk-toolbar"><strong>{selectedIds.length ? `Đã chọn ${selectedIds.length} công việc` : "Chọn các công việc cần thao tác"}</strong><div><button type="button" disabled={!selectedIds.length} onClick={completeSelected}><i className="fa-solid fa-check" />Hoàn thành</button><button className="danger" type="button" disabled={!selectedIds.length} onClick={deleteSelected}><i className="fa-solid fa-trash" />Xóa</button><button type="button" onClick={exitBulkMode}>Xong</button></div></div>}
+            {actionError && <p className="todo-feedback" role="alert">{actionError}</p>}
 
-          <ul className="todo-list">
-            {isLoading && <li className="empty-todo">Đang tải công việc...</li>}
-            {!isLoading && loadError && <li className="empty-todo error-state" role="alert"><span>{loadError}</span><button type="button" onClick={loadTodos}>Thử lại</button></li>}
-            {!isLoading && !loadError && filteredTodos.length === 0 && <li className="empty-todo">{todos.length === 0 ? "Chưa có công việc nào. Hãy thêm công việc đầu tiên!" : "Không có công việc phù hợp."}</li>}
-            {!isLoading && !loadError && paginatedTodos.length > 0 && (
-              <li className="select-all-row"><label><input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} />Chọn tất cả trên trang này</label></li>
-            )}
-            {!isLoading && !loadError && paginatedTodos.map((todo) => (
-              <li className={`todo-item ${isOverdue(todo) ? "is-overdue" : ""}`} key={todo.id}>
-                <label className="select-todo"><input type="checkbox" checked={selectedIds.includes(todo.id)} onChange={() => toggleSelection(todo.id)} /><span className="sr-only">Chọn {todo.title}</span></label>
-                <input type="checkbox" checked={todo.completed} aria-label={`Đánh dấu ${todo.title} là hoàn thành`} onChange={() => toggleTodo(todo.id, todo.completed)} />
-                <button className="todo-content" type="button" onClick={() => setSelectedTodo(todo)}>
-                  <span style={{ textDecoration: todo.completed ? "line-through" : "none", fontSize: "20px" }}>{todo.title}{todo.priority === "Cao" && <i className="fa-solid fa-star urgent-star" aria-label="Ưu tiên cao"></i>}</span>
-                  <TodoBadges todo={todo} />
-                </button>
-                <button className="delete-btn-home" type="button" aria-label={`Xóa ${todo.title}`} onClick={() => deleteTodo(todo.id)}><TrashBox /></button>
-              </li>
-            ))}
-          </ul>
-
-          {!isLoading && !loadError && filteredTodos.length > PAGE_SIZE && (
-            <nav className="pagination" aria-label="Phân trang công việc">
-              <button type="button" disabled={currentPage === 1} onClick={() => setPage((current) => Math.max(1, current - 1))}>Trước</button>
-              <span>Trang {currentPage}/{totalPages}</span>
-              <button type="button" disabled={currentPage === totalPages} onClick={() => setPage((current) => Math.min(totalPages, current + 1))}>Sau</button>
-            </nav>
-          )}
-        </section>
-
-        {undoTodo && <div className="undo-toast" role="status"><span>Đã xóa “{undoTodo.title}”.</span><button type="button" onClick={undoDelete}>Hoàn tác</button></div>}
-        <TodoModal isOpen={showModal} onClose={() => setShowModal(false)} onSave={addTodo} />
-        <TodoDetail key={selectedTodo?.id || "no-selected-todo"} todo={selectedTodo} onClose={() => setSelectedTodo(null)} onUpdate={editTodo} onDelete={deleteTodo} toggleTodo={toggleTodo} />
-      </div>
+            <div className="task-list-header"><div className="task-view-tabs"><span className="is-active">Tất cả ({filteredTodos.length})</span><span>Đang làm ({activeCount})</span><span>Đã xong ({completedCount})</span></div><span>Sắp xếp: <strong>{sortBy === "reminder_asc" ? "Hạn gần nhất" : "Mới tạo"}</strong></span></div>
+            <ul className="task-list">
+              {isLoading && <li className="empty-todo">Đang tải công việc...</li>}
+              {!isLoading && loadError && <li className="empty-todo error-state" role="alert"><span>{loadError}</span><button type="button" onClick={loadTodos}>Thử lại</button></li>}
+              {!isLoading && !loadError && filteredTodos.length === 0 && <li className="empty-todo"><i className="fa-regular fa-clipboard" />{todos.length === 0 ? "Chưa có công việc nào. Hãy thêm công việc đầu tiên!" : "Không có công việc phù hợp."}</li>}
+              {!isLoading && !loadError && isBulkMode && paginatedTodos.length > 0 && <li className="select-all-row"><label><input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} />Chọn tất cả trên trang này</label></li>}
+              {!isLoading && !loadError && paginatedTodos.map((todo) => <TaskRow key={todo.id} todo={todo} isOverdue={isOverdue(todo)} isBulkMode={isBulkMode} isSelected={selectedIds.includes(todo.id)} onToggle={() => toggleTodo(todo.id, todo.completed)} onSelect={() => toggleSelection(todo.id)} onOpen={() => setSelectedTodo(todo)} onDelete={() => deleteTodo(todo.id)} />)}
+            </ul>
+            {!isLoading && !loadError && filteredTodos.length > PAGE_SIZE && <nav className="pagination" aria-label="Phân trang công việc"><button type="button" disabled={currentPage === 1} onClick={() => setPage((current) => Math.max(1, current - 1))}>Trước</button><span>Trang {currentPage}/{totalPages}</span><button type="button" disabled={currentPage === totalPages} onClick={() => setPage((current) => Math.min(totalPages, current + 1))}>Sau</button></nav>}
+          </section>
+        </div>
+      </section>
+      {undoTodo && <div className="undo-toast" role="status"><span>Đã xóa “{undoTodo.title}”.</span><button type="button" onClick={undoDelete}>Hoàn tác</button></div>}
+      <TodoModal isOpen={showModal} onClose={() => setShowModal(false)} onSave={addTodo} />
+      <TodoDetail key={selectedTodo?.id || "no-selected-todo"} todo={selectedTodo} onClose={() => setSelectedTodo(null)} onUpdate={editTodo} onDelete={deleteTodo} toggleTodo={toggleTodo} />
+      <ConfirmDialog isOpen={Boolean(deleteRequest)} title={deleteRequest?.type === "multiple" ? `Xóa ${deleteRequest.count} công việc?` : "Xóa công việc này?"} description={deleteRequest?.type === "multiple" ? "Các công việc đã chọn sẽ bị xóa và không thể hoàn tác bằng thao tác hàng loạt." : `“${deleteRequest?.todo?.title || ""}” sẽ bị xóa. Bạn có thể hoàn tác trong vài giây sau khi xóa.`} confirmLabel={deleteRequest?.type === "multiple" ? "Xóa tất cả" : "Xóa công việc"} onConfirm={confirmDelete} onClose={() => setDeleteRequest(null)} />
     </main>
   );
 }
