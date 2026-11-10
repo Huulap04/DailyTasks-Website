@@ -46,6 +46,7 @@ function Home() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [isBulkMode, setIsBulkMode] = useState(false);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [deleteRequest, setDeleteRequest] = useState(null);
   const [page, setPage] = useState(1);
@@ -316,10 +317,11 @@ function Home() {
               <label className="task-search"><i className="fa-solid fa-magnifying-glass" /><input ref={searchInputRef} type="search" placeholder="Tìm kiếm công việc nhanh..." aria-label="Tìm kiếm công việc" value={keyword} onChange={(event) => setKeyword(event.target.value)} /></label>
               <div className="task-board__actions">
                 <div className="more-actions"><button className="icon-button" type="button" aria-label="Mở thêm thao tác" aria-expanded={isMoreMenuOpen} onClick={() => setIsMoreMenuOpen((isOpen) => !isOpen)}><i className="fa-solid fa-ellipsis" /></button>{isMoreMenuOpen && <div className="more-actions-menu" role="menu"><button type="button" role="menuitem" onClick={() => { setIsBulkMode(true); setIsMoreMenuOpen(false); }}><i className="fa-regular fa-square-check" />Chọn nhiều công việc</button></div>}</div>
+                <button className="mobile-filter-button" type="button" aria-expanded={isFiltersOpen} onClick={() => setIsFiltersOpen((isOpen) => !isOpen)}><i className="fa-solid fa-sliders" />Lọc</button>
                 <button className="primary-button ds-button ds-button--primary" type="button" onClick={() => setShowModal(true)}><i className="fa-solid fa-plus" />Thêm công việc</button>
               </div>
             </div>
-            <div className="task-board__filters"><TodoFilter {...{ filterType, setFilterType, priority, setPriority, category, setCategory, deadline, setDeadline, sortBy, setSortBy }} /></div>
+            <div className={`task-board__filters ${isFiltersOpen ? "is-open" : ""}`}><TodoFilter {...{ filterType, setFilterType, priority, setPriority, category, setCategory, deadline, setDeadline, sortBy, setSortBy }} /></div>
 
             {isBulkMode && <div className="bulk-toolbar"><strong>{selectedIds.length ? `Đã chọn ${selectedIds.length} công việc` : "Chọn các công việc cần thao tác"}</strong><div><button type="button" disabled={!selectedIds.length} onClick={completeSelected}><i className="fa-solid fa-check" />Hoàn thành</button><button className="danger" type="button" disabled={!selectedIds.length} onClick={deleteSelected}><i className="fa-solid fa-trash" />Xóa</button><button type="button" onClick={exitBulkMode}>Xong</button></div></div>}
             {actionError && <p className="todo-feedback" role="alert">{actionError}</p>}

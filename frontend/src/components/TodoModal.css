@@ -12,8 +12,19 @@
 .task-form-fields input, .task-form-fields select { height: 42px; padding: 0 11px; }
 .task-form-fields textarea { min-height: 92px; padding: 11px; resize: vertical; }
 .task-form-fields input:focus, .task-form-fields textarea:focus, .task-form-fields select:focus { border-color: #818cf8; box-shadow: var(--ds-focus-ring); }
+.rich-text-editor { overflow: hidden; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-sm); background: var(--ds-color-surface); }
+.rich-text-editor:focus-within { border-color: #818cf8; box-shadow: var(--ds-focus-ring); }
+.rich-text-editor__toolbar { display: flex; align-items: center; gap: 3px; padding: 6px 7px; border-bottom: 1px solid #edf0f6; background: #f8fafc; }
+.rich-text-editor__toolbar button, .rich-text-editor__color { display: grid; width: 30px; height: 28px; place-items: center; border: 0; border-radius: 6px; color: #475569; background: transparent; cursor: pointer; }
+.rich-text-editor__toolbar button:hover, .rich-text-editor__color:hover { color: #4338ca; background: #e0e7ff; }
+.rich-text-editor__color { position: relative; overflow: hidden; }
+.rich-text-editor__color input { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+.rich-text-editor__input { min-height: 100px; padding: 11px; outline: 0; color: var(--ds-color-text); font: 14px var(--ds-font-sans); overflow-wrap: anywhere; }
+.rich-text-editor__input:empty::before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; }
+.rich-text-editor__input img, .rich-text-content img { display: block; max-width: 100%; max-height: 220px; margin: 8px 0; border-radius: 8px; object-fit: contain; }
 .task-form-fields__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .modal-feedback { margin: 0 22px 16px; padding: 10px 12px; border: 1px solid #fecdd3; border-radius: var(--ds-radius-sm); color: #be123c; background: #fff1f2; font-size: 12px; font-weight: 600; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 15px 22px; border-top: 1px solid #edf0f6; }
 .modal-actions .ds-button { min-height: 39px; }
 @media (max-width: 540px) { .modal-overlay { padding: 0; align-items: end; } .todo-modal { max-height: calc(100vh - 18px); border-radius: 20px 20px 0 0; } .task-form-fields__grid { grid-template-columns: 1fr; } .todo-modal__header, .task-form-fields, .modal-actions { padding-inline: 16px; } .modal-feedback { margin-inline: 16px; } }
+@media (max-width: 540px) { .modal-actions { padding-bottom: calc(15px + env(safe-area-inset-bottom)); } }

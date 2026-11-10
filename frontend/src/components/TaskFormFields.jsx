@@ -1,3 +1,5 @@
+import RichTextEditor from "./RichTextEditor.jsx";
+
 const CATEGORIES = ["Công việc", "Cá nhân", "Mua sắm", "Sức khỏe", "Khác"];
 const PRIORITIES = ["Thấp", "Trung bình", "Cao"];
 
@@ -8,7 +10,7 @@ function TaskFormFields({ form, onChange, idPrefix = "task" }) {
         <input id={`${idPrefix}-title`} name="title" value={form.title} onChange={onChange} placeholder="Nhập tên việc cần làm rõ ràng..." required />
       </label>
       <label htmlFor={`${idPrefix}-note`}>Mô tả chi tiết
-        <textarea id={`${idPrefix}-note`} name="note" value={form.note} onChange={onChange} placeholder="Ghi chú, yêu cầu hoặc thông tin hữu ích..." rows="4" />
+        <RichTextEditor id={`${idPrefix}-note`} name="note" value={form.note} onChange={onChange} ariaLabel="Mô tả chi tiết" placeholder="Ghi chú, yêu cầu hoặc thông tin hữu ích..." />
       </label>
       <div className="task-form-fields__grid">
         <label htmlFor={`${idPrefix}-category`}>Danh mục

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./TodoDetail.css";
 import { TrashBox } from "./icons.jsx";
+import RichTextEditor, { RichTextContent } from "./RichTextEditor.jsx";
 
 function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -52,14 +53,9 @@ function TodoDetail({ todo, onClose, onUpdate, onDelete, toggleTodo }) {
         <div className="detail-section">
           <span className="detail-label">Note</span>
           {isEditing ? (
-            <textarea
-              className="detail-textarea"
-              name="note"
-              value={form.note}
-              onChange={handleChange}
-            />
+            <RichTextEditor id="detail-note" name="note" value={form.note} onChange={handleChange} ariaLabel="Ghi chú" placeholder="Ghi chú, yêu cầu hoặc thông tin hữu ích..." />
           ) : (
-            <p>{todo.note || "No note"}</p>
+            todo.note ? <RichTextContent value={todo.note} className="detail-rich-note rich-text-content" /> : <p>No note</p>
           )}
         </div>
 

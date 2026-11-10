@@ -5,3 +5,4 @@
 .confirm-dialog p { margin: 0; color: var(--ds-color-text-muted); font-size: 13px; }
 .confirm-dialog > div { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
 .confirm-dialog .ds-button { min-height: 39px; }
+@media (max-width: 390px) { .confirm-overlay { padding: 16px; } .confirm-dialog { padding: 20px 16px; } .confirm-dialog > div { align-items: stretch; } .confirm-dialog .ds-button { flex: 1; padding-inline: 9px; } }

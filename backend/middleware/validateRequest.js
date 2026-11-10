@@ -105,12 +105,12 @@ function validateTodo(req, res, next) {
       "Tiêu đề phải có từ 1 đến 200 ký tự.",
     );
   }
-  if (note !== null && (typeof note !== "string" || note.length > 2000)) {
+  if (note !== null && (typeof note !== "string" || note.length > 700000)) {
     return sendError(
       res,
       400,
       "INVALID_NOTE",
-      "Ghi chú không được vượt quá 2000 ký tự.",
+      "Ghi chú không được vượt quá 700.000 ký tự.",
     );
   }
   if (!validDateTime(reminder)) {

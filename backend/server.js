@@ -59,7 +59,8 @@ app.use(
     },
   })
 );
-app.use(express.json({ limit: "10kb" }));
+// Todo notes can include a small inline image from the rich-text editor.
+app.use(express.json({ limit: "1mb" }));
 
 app.use("/todos", todoLimiter, verifyToken, todoRoutes);
 app.use("/auth", authLimiter, authRoutes);
@@ -84,7 +85,7 @@ app.use((err, req, res, next) => {
     message: isCorsError
       ? "Origin không được phép."
       : isPayloadTooLarge
-        ? "Dữ liệu gửi lên vượt quá giới hạn 10kb."
+        ? "Dữ liệu gửi lên vượt quá giới hạn 1 MB."
         : "Đã có lỗi xảy ra.",
     error: {
       code: isCorsError ? "CORS_NOT_ALLOWED" : isPayloadTooLarge ? "PAYLOAD_TOO_LARGE" : "INTERNAL_ERROR",
