@@ -10,8 +10,6 @@ function TodoFilter({
   setCategory,
   deadline,
   setDeadline,
-  sortBy,
-  setSortBy,
 }) {
   return (
     <div className="filter-controls" aria-label="Bộ lọc công việc">
@@ -57,16 +55,6 @@ function TodoFilter({
         </select>
       </label>
 
-      <label className="filter-box sort-box">
-        <i className="fa-solid fa-arrow-down-wide-short"></i>
-        <span className="sr-only">Sắp xếp</span>
-        <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
-          <option value="created_desc">Mới tạo</option>
-          <option value="reminder_asc">Hạn gần nhất</option>
-          <option value="priority_desc">Ưu tiên cao</option>
-          <option value="title_asc">Tên A–Z</option>
-        </select>
-      </label>
     </div>
   );
 }

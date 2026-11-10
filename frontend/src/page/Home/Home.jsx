@@ -297,7 +297,7 @@ function Home() {
 
       <section className="workspace-main">
         <header className="workspace-topbar">
-          <button className="mobile-logo" type="button" aria-label="Daily Tasks" onClick={() => setIsSidebarCollapsed((current) => !current)}><AppLogo compact /></button>
+          <div className="mobile-logo" aria-label="Daily Tasks"><AppLogo compact /></div>
           <nav className="workspace-tabs" aria-label="Chế độ xem"><button className="is-active" type="button">Hôm nay</button><button type="button">Sắp tới</button><button type="button">Đã xong</button></nav>
           <div className="topbar-actions">
             <button className="icon-button workspace-search-button" type="button" aria-label="Tìm kiếm công việc" onClick={() => searchInputRef.current?.focus()}><i className="fa-solid fa-magnifying-glass" /></button>
